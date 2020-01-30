@@ -49,6 +49,25 @@ function fetchWebPage(url, charset) {
 //body > table:nth-child(1) > tbody > tr > td:nth-child(2) > table:nth-child(3) > tbody > tr > td:nth-child(3) > table:nth-child(7) > tbody > tr > td > table > tbody > tr:nth-child(4) > td > table > tbody > tr:nth-child(29)
 //body > table:nth-child(1) > tbody > tr > td:nth-child(2) > table:nth-child(3) > tbody > tr > td:nth-child(3) > table:nth-child(7) > tbody > tr > td > table:nth-child(3) > tbody > tr:nth-child(30) > td:nth-child(1)
 
+const dataLocationInPage = [
+    {pageID: 330197, confirmed: 4, suspected: 14, death: 10, recovered: 8}, //5月15日
+    {pageID: 328349, confirmed: 3, suspected: 12, death: 9, recovered: 7}, //5月12日
+    {pageID: 327813, confirmed: 4, suspected: 13, death: 10, recovered: 8}, //5月11日
+    {pageID: 324051, confirmed: 3, suspected: 12, death: 9, recovered: 7}, //5月2日
+    {pageID: 321948, confirmed: 3, suspected: 11, death: 9, recovered: 7}, //4月29日
+    {pageID: 320257, confirmed: 3, suspected: 7, death: 9, recovered: 11}, //4月25日
+    {pageID: 318290, confirmed: 5, suspected: 8, death: 7, recovered: 6}, //4月21日
+];
+
+function getDataLocationInPage(pageID) {
+    for (const dataLocation of dataLocationInPage) {
+        if (pageID >= dataLocation.pageID) {
+            return dataLocation;
+        }
+    }
+    return null;
+}
+
 function extractData(url, decodedBody) {
     const $ = cheerio.load(decodedBody);
     const pageID = parseInt(url.match(/\/(\d+)\./)[1]);
@@ -59,42 +78,12 @@ function extractData(url, decodedBody) {
             || text === '全国(内地)';
     }).closest("tr");
     const data = {};
-    if (pageID <= 319457) { //4月24
-        data.confirmed = $(total_tr).find("td:nth-child(5)").text().trim(); //确诊
-        data.suspected = $(total_tr).find("td:nth-child(8)").text().trim(); //疑似
-        data.death = $(total_tr).find("td:nth-child(7)").text().trim(); //死亡
-        data.recovered = $(total_tr).find("td:nth-child(6)").text().trim(); //治愈
-    } else if (pageID <= 321474) { //4月28日
-        data.confirmed = $(total_tr).find("td:nth-child(3)").text().trim(); //确诊
-        data.suspected = $(total_tr).find("td:nth-child(7)").text().trim(); //疑似
-        data.death = $(total_tr).find("td:nth-child(9)").text().trim(); //死亡
-        data.recovered = $(total_tr).find("td:nth-child(11)").text().trim(); //治愈
-    } else if (pageID <= 323381) { //5月1日
-        data.confirmed = $(total_tr).find("td:nth-child(3)").text().trim(); //确诊
-        data.suspected = $(total_tr).find("td:nth-child(11)").text().trim(); //疑似
-        data.death = $(total_tr).find("td:nth-child(9)").text().trim(); //死亡
-        data.recovered = $(total_tr).find("td:nth-child(7)").text().trim(); //治愈
-    } else if (pageID <= 327450) { //5月10日
-        data.confirmed = $(total_tr).find("td:nth-child(3)").text().trim(); //确诊
-        data.suspected = $(total_tr).find("td:nth-child(12)").text().trim(); //疑似
-        data.death = $(total_tr).find("td:nth-child(9)").text().trim(); //死亡
-        data.recovered = $(total_tr).find("td:nth-child(7)").text().trim(); //治愈
-    } else if (pageID <= 327813) { //5月11日
-        data.confirmed = $(total_tr).find("td:nth-child(4)").text().trim(); //确诊
-        data.suspected = $(total_tr).find("td:nth-child(13)").text().trim(); //疑似
-        data.death = $(total_tr).find("td:nth-child(10)").text().trim(); //死亡
-        data.recovered = $(total_tr).find("td:nth-child(8)").text().trim(); //治愈
-    } else if (pageID <= 329578) { //5月14日
-        data.confirmed = $(total_tr).find("td:nth-child(3)").text().trim(); //确诊
-        data.suspected = $(total_tr).find("td:nth-child(12)").text().trim(); //疑似
-        data.death = $(total_tr).find("td:nth-child(9)").text().trim(); //死亡
-        data.recovered = $(total_tr).find("td:nth-child(7)").text().trim(); //治愈
-    } else {
-        data.confirmed = $(total_tr).find("td:nth-child(4)").text().trim(); //确诊
-        data.suspected = $(total_tr).find("td:nth-child(14)").text().trim(); //疑似
-        data.death = $(total_tr).find("td:nth-child(10)").text().trim(); //死亡
-        data.recovered = $(total_tr).find("td:nth-child(8)").text().trim(); //治愈
-    }
+    const dataLocation = getDataLocationInPage(pageID);
+    data.confirmed = $(total_tr).find(`td:nth-child(${dataLocation.confirmed})`).text().trim(); //确诊
+    data.suspected = $(total_tr).find(`td:nth-child(${dataLocation.suspected})`).text().trim(); //疑似
+    data.death = $(total_tr).find(`td:nth-child(${dataLocation.death})`).text().trim(); //死亡
+    data.recovered = $(total_tr).find(`td:nth-child(${dataLocation.recovered})`).text().trim(); //治愈
+
     return data;
 }
 
