@@ -68,9 +68,12 @@ function getDataLocationInPage(pageID) {
     return null;
 }
 
-function extractData(url, decodedBody) {
+function extracePageID(url) {
+    return parseInt(url.match(/\/(\d+)\./)[1]);
+}
+
+function extractData(dataLocation, decodedBody) {
     const $ = cheerio.load(decodedBody);
-    const pageID = parseInt(url.match(/\/(\d+)\./)[1]);
     const total_tr = $("tr > td:nth-child(1)").filter(function() {
         const text = $(this).text().trim();
         return text === '总计' || text === '总 计'
@@ -78,7 +81,6 @@ function extractData(url, decodedBody) {
             || text === '全国(内地)';
     }).closest("tr");
     const data = {};
-    const dataLocation = getDataLocationInPage(pageID);
     data.confirmed = $(total_tr).find(`td:nth-child(${dataLocation.confirmed})`).text().trim(); //确诊
     data.suspected = $(total_tr).find(`td:nth-child(${dataLocation.suspected})`).text().trim(); //疑似
     data.death = $(total_tr).find(`td:nth-child(${dataLocation.death})`).text().trim(); //死亡
@@ -87,12 +89,12 @@ function extractData(url, decodedBody) {
     return data;
 }
 
-function parseOnePage(url, date) {
+function parseOnePage(url, dataLocation, date) {
     return fetchWebPage(url, "GB2312")
         .then(function (pageContent) {
             const $ = cheerio.load(pageContent.decodedBody);
             console.log("link: %s date:%s", url, date);
-            const data = extractData(pageContent.url, pageContent.decodedBody);
+            const data = extractData(dataLocation, pageContent.decodedBody);
             data["date"] = date;
             console.log(`confirmed: %d suspected: %d death: %d recovered: %d`,
                 data.confirmed, data.suspected, data.death, data.recovered);
@@ -110,12 +112,16 @@ fetchWebPage("http://www.china.com.cn/chinese/zhuanti/feiyan/325381.htm")
         $($(calendar).find("tr > td > div > a").get().reverse()).each((index, element) => {
             const url = `http://www.china.com.cn${$(element).attr("href")}`;
             const date = $(element).text();
-            allDays.push({url: url, date: date});
+            const pageID = extracePageID(url);
+            const dataLocation = getDataLocationInPage(pageID);
+            if (dataLocation) {
+                allDays.push({url: url, dataLocation: dataLocation, date: date});
+            }
         });
         function* allDaysDataGen() {
             let allData = [];
             for (let oneDay of allDays) {
-                let data = yield parseOnePage(oneDay.url, oneDay.date);
+                let data = yield parseOnePage(oneDay.url, oneDay.dataLocation, oneDay.date);
                 allData.push(data);
             }
             return allData;
