@@ -49,15 +49,18 @@ function fetchWebPage(url, charset) {
 //body > table:nth-child(1) > tbody > tr > td:nth-child(2) > table:nth-child(3) > tbody > tr > td:nth-child(3) > table:nth-child(7) > tbody > tr > td > table > tbody > tr:nth-child(4) > td > table > tbody > tr:nth-child(29)
 //body > table:nth-child(1) > tbody > tr > td:nth-child(2) > table:nth-child(3) > tbody > tr > td:nth-child(3) > table:nth-child(7) > tbody > tr > td > table:nth-child(3) > tbody > tr:nth-child(30) > td:nth-child(1)
 
+const provinces = ['北京','天津','河北','山西','内蒙古','辽宁','吉林','黑龙江','上海','江苏','浙江','安徽','福建','江西','山东','河南','湖北','湖南','广东','广西','海南','重庆','四川','贵州','云南','西藏','陕西','甘肃','青海','宁夏','新疆', '香港', '澳门', '台湾'];
+
 const dataLocationInPage = [
-    {pageID: 342345, confirmed: 4, suspected: 13, death: 9, recovered: 7}, //6月8日
-    {pageID: 330197, confirmed: 4, suspected: 14, death: 10, recovered: 8}, //5月15日
-    {pageID: 328349, confirmed: 3, suspected: 12, death: 9, recovered: 7}, //5月12日
-    {pageID: 327813, confirmed: 4, suspected: 13, death: 10, recovered: 8}, //5月11日
-    {pageID: 324051, confirmed: 3, suspected: 12, death: 9, recovered: 7}, //5月2日
-    {pageID: 321948, confirmed: 3, suspected: 11, death: 9, recovered: 7}, //4月29日
-    {pageID: 320257, confirmed: 3, suspected: 7, death: 9, recovered: 11}, //4月25日
-    {pageID: 318290, confirmed: 5, suspected: 8, death: 7, recovered: 6}, //4月21日
+    {pageID: 342924, confirmed: 4, suspected: 13, death: 9, recovered: 7, provinceOffset: 1}, //6月9日
+    {pageID: 342345, confirmed: 4, suspected: 13, death: 9, recovered: 7, provinceOffset: 0}, //6月8日
+    {pageID: 330197, confirmed: 4, suspected: 14, death: 10, recovered: 8, provinceOffset: 1}, //5月15日
+    {pageID: 328349, confirmed: 3, suspected: 12, death: 9, recovered: 7, provinceOffset: 1}, //5月12日
+    {pageID: 327813, confirmed: 4, suspected: 13, death: 10, recovered: 8, provinceOffset: 0}, //5月11日
+    {pageID: 324051, confirmed: 3, suspected: 12, death: 9, recovered: 7, provinceOffset: 1}, //5月2日
+    {pageID: 321948, confirmed: 3, suspected: 11, death: 9, recovered: 7, provinceOffset: 1}, //4月29日
+    {pageID: 320257, confirmed: 3, suspected: 7, death: 9, recovered: 11, provinceOffset: 0}, //4月25日
+    {pageID: 318290, confirmed: 5, suspected: 8, death: 7, recovered: 6, provinceOffset: 0}, //4月21日
 ];
 
 //整理自
@@ -127,7 +130,7 @@ const dateUrls = [
     ['6月20日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/350750.htm'],
     ['6月21日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/351010.htm'],
     ['6月22日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/351222.htm'],
-    ['6月23日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/351925.htm'],
+    ['6月23日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/351925.htm'],//基本解除
     ['6月24日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/352763.htm'],
     ['6月25日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/353571.htm'],
     ['6月26日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/354293.htm'],
@@ -197,7 +200,7 @@ function extracePageID(url) {
     return parseInt(url.match(/\/(\d+)\./)[1]);
 }
 
-function extractData(dataLocation, decodedBody) {
+function extractCountryData(dataLocation, decodedBody) {
     const $ = cheerio.load(decodedBody);
     const total_tr = $("tbody > tr:last-child > td:nth-child(1)").filter(function() {
         const text = $(this).text().trim();
@@ -215,16 +218,45 @@ function extractData(dataLocation, decodedBody) {
     return data;
 }
 
+function extractProvincesData(pageID, dataLocation, decodedBody) {
+    const $ = cheerio.load(decodedBody);
+    const provincesFilter = function() {
+        const text = $(this).text().trim();
+        return provinces.indexOf(text) !== -1;
+    };
+    const datas = [];
+    $('tbody > tr > td').filter(provincesFilter)
+        .closest('tr').each(function () {
+            let recordLine = $(this);
+            const data = {};
+            data.name = recordLine.find('td').filter(provincesFilter).text().trim();
+            data.value = parseInt(recordLine.find(`td:nth-child(${dataLocation.confirmed + dataLocation.provinceOffset})`).text().trim()); //确诊
+            if (!isNaN(data.value)) {
+                datas.push(data);
+            }
+        });
+
+    return datas;   
+}
+
+function printProvincesData(date, provincesData) {
+    const dateFormated = date.replace(/(\d+)月(\d+)日/, '2003-$1-$2');
+    console.log(`'${dateFormated}': ${JSON.stringify(provincesData)},`);
+}
+
 function parseOnePage(url, dataLocation, date) {
     return fetchWebPage(url, "GB2312")
         .then(function (pageContent) {
             const $ = cheerio.load(pageContent.decodedBody);
             //console.log(`['${date}, '${url}'],`);
-            const data = extractData(dataLocation, pageContent.decodedBody);
-            data["date"] = date;
-            const output = `['${date}', '${data.confirmed}', '${data.suspected}', '${data.death}', '${data.recovered}'],`;
-            console.log(output);
-            return data;
+            const countryData = extractCountryData(dataLocation, pageContent.decodedBody);
+            countryData["date"] = date;
+            const output = `['${date}', '${countryData.confirmed}', '${countryData.suspected}', '${countryData.death}', '${countryData.recovered}'],`;
+            //console.log(output);
+            const pageID = extracePageID(url);
+            const provincesData = extractProvincesData(pageID, dataLocation, pageContent.decodedBody);
+            printProvincesData(date, provincesData);
+            return countryData;
         });
 }
 

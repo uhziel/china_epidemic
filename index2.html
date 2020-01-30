@@ -1,0 +1,162 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>test</title>
+        <script src="echarts.js"></script>
+        <script src="map/js/china.js"></script>
+        <style>
+            #map {
+                width: 800px;
+                height: 800px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+    function getTimeLineData(dataMap) {
+        return Object.keys(dataMap);
+    }
+    function getTimeLineOptions(dataMap) {
+        var options = [];
+        for (var key in dataMap) {
+            if (dataMap.hasOwnProperty(key)) {
+                var option = {
+                    series: [
+                        { data: dataMap[key] },
+                    ]
+                };
+                options.push(option);
+            }
+        }
+        return options;
+    }
+    var dataMap = {
+      '2003-4-21': [{"name":"广东","value":1317},{"name":"北京","value":482},{"name":"山西","value":120},{"name":"内蒙古","value":30},{"name":"四川","value":8},{"name":"广西","value":14},{"name":"河南","value":3},{"name":"吉林","value":3},{"name":"辽宁","value":2},{"name":"陕西","value":1},{"name":"湖南","value":6},{"name":"上海","value":2}],
+'2003-4-22': [{"name":"广东","value":1330},{"name":"北京","value":588},{"name":"山西","value":141},{"name":"内蒙古","value":33},{"name":"四川","value":8},{"name":"广西","value":14},{"name":"河南","value":6},{"name":"宁夏","value":5},{"name":"吉林","value":7},{"name":"浙江","value":3},{"name":"辽宁","value":1},{"name":"甘肃","value":2},{"name":"陕西","value":2},{"name":"湖南","value":6},{"name":"上海","value":2},{"name":"天津","value":5},{"name":"山东","value":1},{"name":"湖北","value":1},{"name":"福建","value":3}],
+'2003-4-23': [{"name":"广东","value":1344},{"name":"北京","value":693},{"name":"山西","value":157},{"name":"内蒙古","value":36},{"name":"四川","value":8},{"name":"广西","value":15},{"name":"河南","value":6},{"name":"宁夏","value":5},{"name":"吉林","value":7},{"name":"浙江","value":3},{"name":"辽宁","value":1},{"name":"甘肃","value":2},{"name":"陕西","value":2},{"name":"湖南","value":6},{"name":"上海","value":2},{"name":"河北","value":6},{"name":"天津","value":7},{"name":"山东","value":1},{"name":"湖北","value":1},{"name":"福建","value":3}],
+'2003-4-24': [{"name":"广东","value":1359},{"name":"北京","value":774},{"name":"山西","value":162},{"name":"内蒙古","value":47},{"name":"广西","value":16},{"name":"四川","value":8},{"name":"吉林","value":7},{"name":"河南","value":8},{"name":"湖南","value":6},{"name":"宁夏","value":5},{"name":"天津","value":8},{"name":"福建","value":3},{"name":"浙江","value":3},{"name":"上海","value":2},{"name":"甘肃","value":2},{"name":"陕西","value":2},{"name":"辽宁","value":1},{"name":"山东","value":1},{"name":"湖北","value":1},{"name":"河北","value":6},{"name":"新疆","value":0},{"name":"重庆","value":0},{"name":"江苏","value":0},{"name":"贵州","value":0},{"name":"江西","value":0},{"name":"安徽","value":1}],
+'2003-4-25': [{"name":"广东","value":1374},{"name":"北京","value":877},{"name":"山西","value":173},{"name":"内蒙古","value":70},{"name":"广西","value":16},{"name":"四川","value":9},{"name":"吉林","value":7},{"name":"河南","value":9},{"name":"湖南","value":6},{"name":"宁夏","value":5},{"name":"天津","value":21},{"name":"福建","value":3},{"name":"浙江","value":3},{"name":"上海","value":2},{"name":"甘肃","value":2},{"name":"陕西","value":2},{"name":"辽宁","value":1},{"name":"山东","value":1},{"name":"湖北","value":1},{"name":"河北","value":18},{"name":"新疆","value":0},{"name":"重庆","value":0},{"name":"江苏","value":0},{"name":"江西","value":0},{"name":"安徽","value":1}],
+'2003-4-26': [{"name":"北京","value":988},{"name":"天津","value":22},{"name":"河北","value":21},{"name":"山西","value":195},{"name":"内蒙古","value":74},{"name":"辽宁","value":1},{"name":"吉林","value":7},{"name":"黑龙江","value":0},{"name":"上海","value":2},{"name":"江苏","value":0},{"name":"浙江","value":3},{"name":"安徽","value":1},{"name":"福建","value":3},{"name":"江西","value":0},{"name":"山东","value":1},{"name":"河南","value":10},{"name":"湖北","value":2},{"name":"湖南","value":6},{"name":"广东","value":1379},{"name":"广西","value":16},{"name":"重庆","value":0},{"name":"四川","value":10},{"name":"陕西","value":5},{"name":"甘肃","value":2},{"name":"宁夏","value":5},{"name":"新疆","value":0}],
+'2003-4-27': [{"name":"北京","value":1114},{"name":"天津","value":22},{"name":"河北","value":27},{"name":"山西","value":214},{"name":"内蒙古","value":76},{"name":"辽宁","value":1},{"name":"吉林","value":7},{"name":"黑龙江","value":0},{"name":"上海","value":2},{"name":"江苏","value":0},{"name":"浙江","value":3},{"name":"安徽","value":4},{"name":"福建","value":3},{"name":"江西","value":0},{"name":"山东","value":1},{"name":"河南","value":10},{"name":"湖北","value":2},{"name":"湖南","value":6},{"name":"广东","value":1382},{"name":"广西","value":16},{"name":"重庆","value":0},{"name":"四川","value":12},{"name":"陕西","value":5},{"name":"甘肃","value":2},{"name":"宁夏","value":5},{"name":"新疆","value":0}],
+'2003-4-28': [{"name":"北京","value":1199},{"name":"天津","value":43},{"name":"河北","value":30},{"name":"山西","value":243},{"name":"内蒙古","value":114},{"name":"辽宁","value":1},{"name":"吉林","value":7},{"name":"黑龙江","value":0},{"name":"上海","value":2},{"name":"江苏","value":0},{"name":"浙江","value":3},{"name":"安徽","value":4},{"name":"福建","value":3},{"name":"江西","value":0},{"name":"山东","value":1},{"name":"河南","value":11},{"name":"湖北","value":3},{"name":"湖南","value":6},{"name":"广东","value":1395},{"name":"广西","value":16},{"name":"重庆","value":0},{"name":"四川","value":12},{"name":"陕西","value":5},{"name":"甘肃","value":3},{"name":"宁夏","value":5},{"name":"新疆","value":0}],
+'2003-4-29': [{"name":"北京","value":1347},{"name":"天津","value":44},{"name":"河北","value":39},{"name":"山西","value":266},{"name":"内蒙古","value":120},{"name":"辽宁","value":1},{"name":"吉林","value":7},{"name":"黑龙江","value":0},{"name":"上海","value":2},{"name":"江苏","value":0},{"name":"浙江","value":3},{"name":"安徽","value":5},{"name":"福建","value":3},{"name":"江西","value":0},{"name":"山东","value":1},{"name":"河南","value":12},{"name":"湖北","value":3},{"name":"湖南","value":6},{"name":"广东","value":1399},{"name":"广西","value":17},{"name":"重庆","value":0},{"name":"四川","value":12},{"name":"陕西","value":8},{"name":"甘肃","value":3},{"name":"宁夏","value":5},{"name":"新疆","value":0}],
+'2003-4-30': [{"name":"北京","value":1440},{"name":"天津","value":49},{"name":"河北","value":48},{"name":"山西","value":299},{"name":"内蒙古","value":127},{"name":"辽宁","value":1},{"name":"吉林","value":7},{"name":"黑龙江","value":0},{"name":"上海","value":2},{"name":"江苏","value":1},{"name":"浙江","value":3},{"name":"安徽","value":7},{"name":"福建","value":3},{"name":"江西","value":0},{"name":"山东","value":1},{"name":"河南","value":12},{"name":"湖北","value":3},{"name":"湖南","value":6},{"name":"广东","value":1405},{"name":"广西","value":18},{"name":"重庆","value":0},{"name":"四川","value":12},{"name":"陕西","value":8},{"name":"甘肃","value":3},{"name":"宁夏","value":5},{"name":"新疆","value":0}],
+'2003-5-1': [{"name":"北京","value":1553},{"name":"天津","value":61},{"name":"河北","value":56},{"name":"山西","value":307},{"name":"内蒙古","value":154},{"name":"辽宁","value":1},{"name":"吉林","value":9},{"name":"黑龙江","value":0},{"name":"上海","value":2},{"name":"江苏","value":1},{"name":"浙江","value":3},{"name":"安徽","value":7},{"name":"福建","value":3},{"name":"江西","value":0},{"name":"山东","value":1},{"name":"河南","value":13},{"name":"湖北","value":3},{"name":"湖南","value":6},{"name":"广东","value":1412},{"name":"广西","value":18},{"name":"重庆","value":0},{"name":"四川","value":12},{"name":"陕西","value":8},{"name":"甘肃","value":3},{"name":"宁夏","value":5},{"name":"新疆","value":0}],
+'2003-5-2': [{"name":"北京","value":1636},{"name":"天津","value":73},{"name":"河北","value":70},{"name":"山西","value":311},{"name":"内蒙古","value":180},{"name":"辽宁","value":1},{"name":"吉林","value":14},{"name":"黑龙江","value":0},{"name":"上海","value":2},{"name":"江苏","value":4},{"name":"浙江","value":3},{"name":"安徽","value":9},{"name":"福建","value":3},{"name":"江西","value":0},{"name":"山东","value":1},{"name":"河南","value":14},{"name":"湖北","value":4},{"name":"湖南","value":6},{"name":"广东","value":1421},{"name":"广西","value":20},{"name":"重庆","value":0},{"name":"四川","value":10},{"name":"陕西","value":9},{"name":"甘肃","value":3},{"name":"宁夏","value":5},{"name":"新疆","value":0}],
+'2003-5-3': [{"name":"北京","value":1741},{"name":"天津","value":91},{"name":"河北","value":79},{"name":"山西","value":329},{"name":"内蒙古","value":190},{"name":"辽宁","value":1},{"name":"吉林","value":14},{"name":"黑龙江","value":0},{"name":"上海","value":2},{"name":"江苏","value":4},{"name":"浙江","value":3},{"name":"安徽","value":9},{"name":"福建","value":3},{"name":"江西","value":0},{"name":"山东","value":1},{"name":"河南","value":14},{"name":"湖北","value":4},{"name":"湖南","value":6},{"name":"广东","value":1432},{"name":"广西","value":20},{"name":"重庆","value":0},{"name":"四川","value":10},{"name":"陕西","value":9},{"name":"甘肃","value":3},{"name":"宁夏","value":6},{"name":"新疆","value":0}],
+'2003-5-4': [{"name":"北京","value":1803},{"name":"天津","value":100},{"name":"河北","value":98},{"name":"山西","value":339},{"name":"内蒙古","value":225},{"name":"辽宁","value":1},{"name":"吉林","value":18},{"name":"黑龙江","value":0},{"name":"上海","value":4},{"name":"江苏","value":4},{"name":"浙江","value":3},{"name":"安徽","value":8},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":14},{"name":"湖北","value":4},{"name":"湖南","value":6},{"name":"广东","value":1441},{"name":"广西","value":20},{"name":"重庆","value":1},{"name":"四川","value":11},{"name":"陕西","value":9},{"name":"甘肃","value":5},{"name":"宁夏","value":6},{"name":"新疆","value":0}],
+'2003-5-5': [{"name":"北京","value":1897},{"name":"天津","value":109},{"name":"河北","value":107},{"name":"山西","value":360},{"name":"内蒙古","value":230},{"name":"辽宁","value":1},{"name":"吉林","value":21},{"name":"黑龙江","value":0},{"name":"上海","value":4},{"name":"江苏","value":4},{"name":"浙江","value":3},{"name":"安徽","value":9},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":14},{"name":"湖北","value":4},{"name":"湖南","value":6},{"name":"广东","value":1453},{"name":"广西","value":20},{"name":"重庆","value":1},{"name":"四川","value":11},{"name":"陕西","value":10},{"name":"甘肃","value":5},{"name":"宁夏","value":6},{"name":"新疆","value":0}],
+'2003-5-6': [{"name":"北京","value":1960},{"name":"天津","value":120},{"name":"河北","value":113},{"name":"山西","value":369},{"name":"内蒙古","value":251},{"name":"辽宁","value":1},{"name":"吉林","value":23},{"name":"黑龙江","value":0},{"name":"上海","value":6},{"name":"江苏","value":4},{"name":"浙江","value":3},{"name":"安徽","value":9},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":14},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1465},{"name":"广西","value":20},{"name":"重庆","value":1},{"name":"四川","value":11},{"name":"陕西","value":10},{"name":"甘肃","value":6},{"name":"宁夏","value":6},{"name":"新疆","value":0}],
+'2003-5-7': [{"name":"北京","value":2049},{"name":"天津","value":127},{"name":"河北","value":134},{"name":"山西","value":378},{"name":"内蒙古","value":258},{"name":"辽宁","value":1},{"name":"吉林","value":25},{"name":"黑龙江","value":0},{"name":"上海","value":6},{"name":"江苏","value":4},{"name":"浙江","value":3},{"name":"安徽","value":9},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":15},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1478},{"name":"广西","value":20},{"name":"重庆","value":3},{"name":"四川","value":11},{"name":"陕西","value":10},{"name":"甘肃","value":6},{"name":"宁夏","value":6}],
+'2003-5-8': [{"name":"北京","value":2136},{"name":"天津","value":132},{"name":"河北","value":147},{"name":"山西","value":391},{"name":"内蒙古","value":266},{"name":"辽宁","value":2},{"name":"吉林","value":26},{"name":"黑龙江","value":0},{"name":"上海","value":6},{"name":"江苏","value":5},{"name":"浙江","value":4},{"name":"安徽","value":9},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":15},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1485},{"name":"广西","value":20},{"name":"重庆","value":3},{"name":"四川","value":11},{"name":"陕西","value":11},{"name":"甘肃","value":6},{"name":"宁夏","value":6}],
+'2003-5-9': [{"name":"北京","value":2177},{"name":"天津","value":141},{"name":"河北","value":156},{"name":"山西","value":400},{"name":"内蒙古","value":284},{"name":"辽宁","value":2},{"name":"吉林","value":26},{"name":"黑龙江","value":0},{"name":"上海","value":6},{"name":"江苏","value":5},{"name":"浙江","value":4},{"name":"安徽","value":9},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":15},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1502},{"name":"广西","value":20},{"name":"重庆","value":3},{"name":"四川","value":13},{"name":"陕西","value":12},{"name":"甘肃","value":7},{"name":"宁夏","value":6}],
+'2003-5-10': [{"name":"北京","value":2227},{"name":"天津","value":149},{"name":"河北","value":157},{"name":"山西","value":410},{"name":"内蒙古","value":289},{"name":"辽宁","value":2},{"name":"吉林","value":26},{"name":"黑龙江","value":0},{"name":"上海","value":7},{"name":"江苏","value":6},{"name":"浙江","value":4},{"name":"安徽","value":10},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":15},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1504},{"name":"广西","value":20},{"name":"重庆","value":3},{"name":"四川","value":13},{"name":"陕西","value":12},{"name":"甘肃","value":7},{"name":"宁夏","value":6}],
+'2003-5-11': [{"name":"北京","value":2265},{"name":"天津","value":157},{"name":"河北","value":166},{"name":"山西","value":416},{"name":"内蒙古","value":288},{"name":"辽宁","value":2},{"name":"吉林","value":26},{"name":"黑龙江","value":0},{"name":"上海","value":7},{"name":"江苏","value":7},{"name":"浙江","value":4},{"name":"安徽","value":10},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":15},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1506},{"name":"广西","value":20},{"name":"重庆","value":3},{"name":"四川","value":13},{"name":"陕西","value":12},{"name":"甘肃","value":8},{"name":"宁夏","value":6}],
+'2003-5-12': [{"name":"北京","value":2304},{"name":"天津","value":163},{"name":"河北","value":177},{"name":"山西","value":420},{"name":"内蒙古","value":288},{"name":"辽宁","value":3},{"name":"吉林","value":27},{"name":"黑龙江","value":0},{"name":"上海","value":7},{"name":"江苏","value":7},{"name":"浙江","value":4},{"name":"安徽","value":10},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":15},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1509},{"name":"广西","value":20},{"name":"重庆","value":3},{"name":"四川","value":13},{"name":"陕西","value":12},{"name":"甘肃","value":8},{"name":"宁夏","value":6}],
+'2003-5-13': [{"name":"北京","value":2347},{"name":"天津","value":167},{"name":"河北","value":191},{"name":"山西","value":431},{"name":"内蒙古","value":288},{"name":"辽宁","value":3},{"name":"吉林","value":27},{"name":"黑龙江","value":0},{"name":"上海","value":7},{"name":"江苏","value":7},{"name":"浙江","value":4},{"name":"安徽","value":10},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":15},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1509},{"name":"广西","value":20},{"name":"重庆","value":3},{"name":"四川","value":14},{"name":"陕西","value":12},{"name":"甘肃","value":8},{"name":"宁夏","value":6}],
+'2003-5-14': [{"name":"北京","value":2370},{"name":"天津","value":171},{"name":"河北","value":194},{"name":"山西","value":435},{"name":"内蒙古","value":288},{"name":"辽宁","value":3},{"name":"吉林","value":30},{"name":"黑龙江","value":0},{"name":"上海","value":7},{"name":"江苏","value":7},{"name":"浙江","value":4},{"name":"安徽","value":10},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":15},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1510},{"name":"广西","value":20},{"name":"重庆","value":3},{"name":"四川","value":15},{"name":"陕西","value":12},{"name":"甘肃","value":8},{"name":"宁夏","value":5}],
+'2003-5-15': [{"name":"北京","value":2388},{"name":"天津","value":174},{"name":"河北","value":200},{"name":"山西","value":442},{"name":"内蒙古","value":288},{"name":"辽宁","value":3},{"name":"吉林","value":32},{"name":"黑龙江","value":0},{"name":"上海","value":7},{"name":"江苏","value":7},{"name":"浙江","value":4},{"name":"安徽","value":10},{"name":"福建","value":3},{"name":"江西","value":1},{"name":"山东","value":1},{"name":"河南","value":15},{"name":"湖北","value":6},{"name":"湖南","value":6},{"name":"广东","value":1513},{"name":"广西","value":20},{"name":"重庆","value":3},{"name":"四川","value":15},{"name":"陕西","value":12},{"name":"甘肃","value":8},{"name":"宁夏","value":5}],
+'2003-5-16': [{"name":"北京","value":2405},{"name":"天津","value":177},{"name":"河北","value":202},{"name":"山西","value":443},{"name":"吉林","value":33},{"name":"广东","value":1515},{"name":"四川","value":17},{"name":"内蒙古","value":288},{"name":"辽宁","value":3},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"上海","value":7},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"湖北","value":6},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"广西","value":20},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0}],
+'2003-5-17': [{"name":"北京","value":2420},{"name":"天津","value":176},{"name":"山西","value":443},{"name":"内蒙古","value":290},{"name":"吉林","value":35},{"name":"广东","value":1514},{"name":"广西","value":21},{"name":"河北","value":202},{"name":"四川","value":17},{"name":"辽宁","value":3},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"上海","value":7},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"湖北","value":6},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0}],
+'2003-5-18': [{"name":"北京","value":2434},{"name":"河北","value":210},{"name":"山西","value":445},{"name":"广西","value":22},{"name":"天津","value":176},{"name":"内蒙古","value":289},{"name":"吉林","value":35},{"name":"广东","value":1514},{"name":"四川","value":17},{"name":"辽宁","value":3},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"上海","value":7},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"湖北","value":6},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0}],
+'2003-5-19': [{"name":"北京","value":2437},{"name":"河北","value":214},{"name":"湖北","value":7},{"name":"山西","value":444},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"内蒙古","value":286},{"name":"吉林","value":35},{"name":"广东","value":1514},{"name":"四川","value":17},{"name":"辽宁","value":3},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"上海","value":7},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0}],
+'2003-5-20': [{"name":"北京","value":2444},{"name":"河北","value":217},{"name":"山西","value":445},{"name":"内蒙古","value":287},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1514},{"name":"四川","value":17},{"name":"辽宁","value":3},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"上海","value":7},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0}],
+'2003-5-21': [{"name":"北京","value":2444},{"name":"河北","value":221},{"name":"山西","value":445},{"name":"内蒙古","value":285},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1513},{"name":"四川","value":17},{"name":"辽宁","value":3},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"上海","value":7},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0}],
+'2003-5-22': [{"name":"北京","value":2456},{"name":"河北","value":227},{"name":"山西","value":447},{"name":"内蒙古","value":285},{"name":"辽宁","value":5},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1513},{"name":"四川","value":17},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"上海","value":7},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-5-23': [{"name":"北京","value":2465},{"name":"四川","value":19},{"name":"内蒙古","value":286},{"name":"河北","value":228},{"name":"上海","value":8},{"name":"山西","value":447},{"name":"辽宁","value":5},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"广东","value":1513},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"甘肃","value":8},{"name":"江苏","value":7},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-5-24': [{"name":"北京","value":2490},{"name":"河北","value":223},{"name":"山西","value":450},{"name":"内蒙古","value":286},{"name":"辽宁","value":6},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1513},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-5-25': [{"name":"北京","value":2499},{"name":"河北","value":222},{"name":"内蒙古","value":286},{"name":"山西","value":449},{"name":"辽宁","value":6},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1513},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-5-26': [{"name":"北京","value":2504},{"name":"山西","value":450},{"name":"内蒙古","value":286},{"name":"河北","value":216},{"name":"辽宁","value":6},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1513},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-5-27': [{"name":"北京","value":2512},{"name":"山西","value":450},{"name":"内蒙古","value":285},{"name":"河北","value":216},{"name":"辽宁","value":6},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1512},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-5-28': [{"name":"北京","value":2514},{"name":"河北","value":216},{"name":"山西","value":450},{"name":"内蒙古","value":285},{"name":"辽宁","value":6},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1511},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-5-29': [{"name":"北京","value":2517},{"name":"河北","value":216},{"name":"山西","value":450},{"name":"内蒙古","value":284},{"name":"辽宁","value":6},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1511},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-5-30': [{"name":"北京","value":2520},{"name":"河北","value":216},{"name":"山西","value":450},{"name":"内蒙古","value":284},{"name":"辽宁","value":6},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1511},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-5-31': [{"name":"北京","value":2521},{"name":"河北","value":215},{"name":"山西","value":450},{"name":"内蒙古","value":284},{"name":"辽宁","value":6},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1511},{"name":"江苏","value":7},{"name":"甘肃","value":8},{"name":"安徽","value":10},{"name":"陕西","value":12},{"name":"浙江","value":4},{"name":"河南","value":15},{"name":"重庆","value":3},{"name":"江西","value":1},{"name":"宁夏","value":5},{"name":"山东","value":1},{"name":"福建","value":3},{"name":"湖南","value":6},{"name":"黑龙江","value":0},{"name":"新疆","value":0}],
+'2003-6-1': [{"name":"北京","value":2522},{"name":"河北","value":216},{"name":"山西","value":448},{"name":"内蒙古","value":284},{"name":"辽宁","value":6},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1511}],
+'2003-6-2': [{"name":"北京","value":2522},{"name":"河北","value":216},{"name":"山西","value":448},{"name":"内蒙古","value":284},{"name":"辽宁","value":6},{"name":"四川","value":19},{"name":"上海","value":8},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"广东","value":1511},{"name":"天津","value":175},{"name":"吉林","value":35}],
+'2003-6-3': [{"name":"北京","value":2522},{"name":"辽宁","value":7},{"name":"河北","value":216},{"name":"山西","value":448},{"name":"内蒙古","value":284},{"name":"四川","value":19},{"name":"上海","value":8},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"广东","value":1511},{"name":"天津","value":175},{"name":"吉林","value":35}],
+'2003-6-4': [{"name":"北京","value":2522},{"name":"辽宁","value":7},{"name":"河北","value":216},{"name":"山西","value":448},{"name":"内蒙古","value":284},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1511}],
+'2003-6-5': [{"name":"北京","value":2522},{"name":"辽宁","value":7},{"name":"河北","value":216},{"name":"山西","value":448},{"name":"内蒙古","value":284},{"name":"上海","value":8},{"name":"四川","value":19},{"name":"湖北","value":7},{"name":"广西","value":22},{"name":"天津","value":175},{"name":"吉林","value":35},{"name":"广东","value":1511}],
+'2003-6-6': [{"name":"四川","value":20},{"name":"北京","value":2522},{"name":"辽宁","value":7},{"name":"山西","value":448},{"name":"内蒙古","value":284},{"name":"上海","value":8},{"name":"湖北","value":7},{"name":"广西","value":22}],
+'2003-6-7': [{"name":"北京","value":2523},{"name":"四川","value":20},{"name":"辽宁","value":7},{"name":"河北","value":215},{"name":"山西","value":448},{"name":"内蒙古","value":284},{"name":"上海","value":8},{"name":"湖北","value":7}],
+'2003-6-8': [{"name":"四川","value":20},{"name":"北京","value":2522},{"name":"辽宁","value":7},{"name":"河北","value":215},{"name":"山西","value":448},{"name":"内蒙古","value":283},{"name":"上海","value":8}],
+'2003-6-9': [{"name":"四川","value":20},{"name":"北京","value":2522},{"name":"辽宁","value":7},{"name":"河北","value":215},{"name":"山西","value":448},{"name":"内蒙古","value":283},{"name":"上海","value":8}],
+'2003-6-10': [{"name":"四川","value":20},{"name":"北京","value":2522},{"name":"辽宁","value":7},{"name":"河北","value":215},{"name":"山西","value":448},{"name":"内蒙古","value":283},{"name":"上海","value":8}],
+'2003-6-11': [{"name":"北京","value":2523},{"name":"四川","value":20},{"name":"辽宁","value":7},{"name":"河北","value":215},{"name":"山西","value":448},{"name":"内蒙古","value":283},{"name":"上海","value":8}],
+'2003-6-12': [{"name":"北京","value":2523},{"name":"四川","value":20},{"name":"辽宁","value":7},{"name":"河北","value":215},{"name":"山西","value":448},{"name":"内蒙古","value":282}],
+'2003-6-13': [{"name":"北京","value":2522},{"name":"四川","value":20},{"name":"辽宁","value":7},{"name":"河北","value":215},{"name":"山西","value":448},{"name":"内蒙古","value":282}],
+'2003-6-14': [{"name":"北京","value":2522}],
+'2003-6-15': [{"name":"北京","value":2522}],
+'2003-6-16': [{"name":"北京","value":2521}],
+'2003-6-17': [{"name":"北京","value":2521}],
+'2003-6-18': [{"name":"北京","value":2521}],
+'2003-6-19': [{"name":"北京","value":2521}],
+'2003-6-20': [{"name":"北京","value":2521}],
+'2003-6-21': [{"name":"北京","value":2521}],
+'2003-6-22': [{"name":"北京","value":2521}],
+'2003-6-23': [{"name":"北京","value":2521}],
+    };
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('map'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        baseOption: {
+            timeline: {
+                autoPlay: true,
+                data: getTimeLineData(dataMap)
+            },
+            title: {
+                text: '疫情地图',
+                subtext: '数据来自丁香园的收集',
+                sublink: 'https://3g.dxy.cn/newh5/view/pneumonia',
+                left: 'center'
+            },
+            tooltip: {},
+            visualMap: {
+                type: 'piecewise',
+                pieces: [
+                    {min: 100, label: '> 100人', color: '#EA5455'},
+                    {min: 10, max: 99, label: '10-99人'},
+                    {min: 1, max: 9, label: '1到9人'},
+                    {min: 0, max: 0, label: '无人', color: '#FFFFFF'},
+                    {value: -1, label: '疑似', color: '#59c4e6'},
+                ],
+                inRange: {
+                    color: ['#ffffff', '#FEB692', '#EA5455']
+                }
+            },
+            series: [{
+                name: '病例',
+                type: 'map',
+                mapType: 'china',
+                roam: false,
+                itemStyle: {
+                    normal: {
+                        label: {
+                            show: true
+                        }
+                    },
+                    emphasis: {
+                        label: {
+                            show: false
+                        },
+                        emphasis: {
+                            shadowBlur: 20,
+                            shadowColor: 'rgb(0,0,0)'
+                        }
+                    }
+                },
+                top: "3%"
+            }]
+        },
+        options: getTimeLineOptions(dataMap)
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+        </script>
+    </body>
+</html>
