@@ -50,6 +50,7 @@ function fetchWebPage(url, charset) {
 //body > table:nth-child(1) > tbody > tr > td:nth-child(2) > table:nth-child(3) > tbody > tr > td:nth-child(3) > table:nth-child(7) > tbody > tr > td > table:nth-child(3) > tbody > tr:nth-child(30) > td:nth-child(1)
 
 const dataLocationInPage = [
+    {pageID: 342345, confirmed: 4, suspected: 13, death: 9, recovered: 7}, //6月8日
     {pageID: 330197, confirmed: 4, suspected: 14, death: 10, recovered: 8}, //5月15日
     {pageID: 328349, confirmed: 3, suspected: 12, death: 9, recovered: 7}, //5月12日
     {pageID: 327813, confirmed: 4, suspected: 13, death: 10, recovered: 8}, //5月11日
@@ -74,10 +75,11 @@ function extracePageID(url) {
 
 function extractData(dataLocation, decodedBody) {
     const $ = cheerio.load(decodedBody);
-    const total_tr = $("tr > td:nth-child(1)").filter(function() {
+    const total_tr = $("tbody > tr:last-child > td:nth-child(1)").filter(function() {
         const text = $(this).text().trim();
         return text === '总计' || text === '总 计'
             || text === '合计' || text.indexOf('合 计') === 0
+            || text.indexOf('累 计') === 0
             || text === '全国(内地)';
     }).closest("tr");
     const data = {};
