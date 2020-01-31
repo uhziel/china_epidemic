@@ -6,8 +6,8 @@
         <script src="map/js/china.js"></script>
         <style>
             #map {
-                width: 800px;
-                height: 800px;
+                width: 900px;
+                height: 100%;
             }
         </style>
     </head>
@@ -22,6 +22,9 @@
         for (var key in dataMap) {
             if (dataMap.hasOwnProperty(key)) {
                 var option = {
+                    title: {
+                      text: `${key}非典疫情`
+                    },
                     series: [
                         { data: dataMap[key] },
                     ]
@@ -105,11 +108,22 @@
     var option = {
         baseOption: {
             timeline: {
+                show: false,
                 autoPlay: true,
-                data: getTimeLineData(dataMap)
+                playInterval: 1000,
+                data: getTimeLineData(dataMap),
+                label: {
+                  formatter: function(value, index) {
+                    const date = new Date(value);
+                    var texts = [(date.getMonth() + 1), date.getDate()];
+                    if (index === 0) {
+                      texts.unshift(date.getFullYear());
+                    }
+                    return texts.join('-');
+                  }
+                }
             },
             title: {
-                text: '疫情地图',
                 subtext: '数据来自丁香园的收集',
                 sublink: 'https://3g.dxy.cn/newh5/view/pneumonia',
                 left: 'center'
@@ -117,11 +131,13 @@
             tooltip: {},
             visualMap: {
                 type: 'piecewise',
+                left: 'left',
+                top: 'bottom',
                 pieces: [
-                    {min: 100, label: '> 100人', color: '#EA5455'},
-                    {min: 10, max: 99, label: '10-99人'},
-                    {min: 1, max: 9, label: '1到9人'},
-                    {min: 0, max: 0, label: '无人', color: '#FFFFFF'},
+                    {gte: 100, label: '>= 100人', color: '#EA5455'},
+                    {gte: 10, lte: 99, label: '10-99人'},
+                    {gte: 1, lte: 9, label: '1到9人'},
+                    {value: 0, label: '无人', color: '#EEEEEE'},
                     {value: -1, label: '疑似', color: '#59c4e6'},
                 ],
                 inRange: {
