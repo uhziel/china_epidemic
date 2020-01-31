@@ -66,6 +66,9 @@ const dataLocationInPage = [
 //整理自
 //http://www.china.com.cn/chinese/zhuanti/feiyan/325381.htm
 //http://web.archive.org/web/20030509203358/http://www.china.com.cn/chinese/zhuanti/feiyan/325381.htm
+const dateUrls_test = [
+    ['6月6日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/341843.htm'],
+]
 const dateUrls = [
     ['4月21日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/318290.htm'],
     ['4月22日', 'http://www.china.com.cn/chinese/zhuanti/feiyan/318574.htm'],
@@ -218,20 +221,45 @@ function extractCountryData(dataLocation, decodedBody) {
     return data;
 }
 
+function toNumber(str) {
+    let num = parseInt(str.trim());
+    if (isNaN(num)) {
+        num = 0;
+    }
+    return num;
+}
+
+function getValidProvince(str) {
+    for (let province of provinces ) {
+        if (str.indexOf(province) === 0) {
+            return province;
+        }
+    }
+    return '未知';
+}
+
 function extractProvincesData(pageID, dataLocation, decodedBody) {
     const $ = cheerio.load(decodedBody);
     const provincesFilter = function() {
         const text = $(this).text().trim();
-        return provinces.indexOf(text) !== -1;
+        for (let province of provinces ) {
+            if (text.indexOf(province) === 0) {
+                return true;
+            }
+        }
+        return false;
     };
     const datas = [];
     $('tbody > tr > td').filter(provincesFilter)
         .closest('tr').each(function () {
             let recordLine = $(this);
             const data = {};
-            data.name = recordLine.find('td').filter(provincesFilter).text().trim();
-            data.value = parseInt(recordLine.find(`td:nth-child(${dataLocation.confirmed + dataLocation.provinceOffset})`).text().trim()); //确诊
-            if (!isNaN(data.value)) {
+            data.name = getValidProvince(recordLine.find('td').filter(provincesFilter).text().trim());
+            const confirmed = toNumber(recordLine.find(`td:nth-child(${dataLocation.confirmed + dataLocation.provinceOffset})`).text()); //确诊
+            const death = toNumber(recordLine.find(`td:nth-child(${dataLocation.death + dataLocation.provinceOffset})`).text()); //死亡
+            const recovered = toNumber(recordLine.find(`td:nth-child(${dataLocation.recovered + dataLocation.provinceOffset})`).text()); //治愈
+            data.value = confirmed - death - recovered; //确诊且在在治疗的
+            if (data.value !== 0) {
                 datas.push(data);
             }
         });
