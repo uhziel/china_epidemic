@@ -49,8 +49,8 @@ async function request () {
       saveData(countries, areas, curMd5);
     }
   }).catch(e => {
-    console.log('Retry')
-    if (times++ > 3) {
+    console.log('Retry ');
+    if ((++times) > 9) {
       throw e
     }
     return request();
