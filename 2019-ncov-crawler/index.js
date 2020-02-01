@@ -37,6 +37,10 @@ function saveData(countries, areas, curMd5) {
   fs.writeFileSync('./rawdata/last_md5.txt', curMd5);
 }
 
+function saveHtmlData(html) {
+  fs.writeFileSync(`./rawdata/${nowString}.html`, html);
+}
+
 let times = 0
 async function request () {
   return axios.request('https://3g.dxy.cn/newh5/view/pneumonia').then
@@ -45,6 +49,7 @@ async function request () {
     const areas = loadAreas(response.data);
     const curMd5 = md5(countries+areas);
     const lastMd5 = getLastMd5();
+    saveHtmlData(response.data);
     if (lastMd5 !== curMd5) {
       saveData(countries, areas, curMd5);
     }
