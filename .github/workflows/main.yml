@@ -1,0 +1,27 @@
+name: gather 2019 ncov
+
+on:
+  schedule:
+    - cron: '0/5 * * * *'
+
+jobs:
+  run:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v2
+
+    - name: setup node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    
+    - name: install dependencies
+      run: |
+        cd crawler
+        npm install
+        
+    - name: Run a one-line script
+      run: echo Hello, world!
