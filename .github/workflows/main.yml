@@ -36,6 +36,8 @@ jobs:
         # The email of the user that will be displayed as the author of the commit
         author_email: uhziel@gmail.com
         # The message for the commit
-        message: commit the datas of 2019-ncov-crawler
+        message: ‘commit the datas of 2019-ncov-crawler’
         # The pattern that mathces file names
         pattern: '*.json'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
