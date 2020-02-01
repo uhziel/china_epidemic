@@ -32,7 +32,7 @@ jobs:
         git config --local user.email "uhziel@gmail.com"
         git config --local user.name "GitHub Action"
         git add -A
-        git commit -m "Add changes" -a
+        git commit -m "gather the datas of 2019 ncov" -a
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
