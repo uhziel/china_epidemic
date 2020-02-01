@@ -26,7 +26,7 @@ jobs:
     - name: gather datas
       run: |
         cd 2019-ncov-crawler
-        node index.js
+         TZ=Asia/Shanghai node index.js
     - name: Commit files
       run: |
         git config --local user.email "uhziel@gmail.com"
