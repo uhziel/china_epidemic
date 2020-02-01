@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
+const md5 = require('md5');
 
 function getNowString() {
   const now = new Date();
@@ -7,26 +8,46 @@ function getNowString() {
 }
 const nowString = getNowString();
 
-const loadCountries = async data => {
+function loadCountries(data) {
   const countries = data
     .match(/window.getListByCountryTypeService2 = (.*?)}catch/)[1];
-  fs.writeFileSync(`./rawdata/${nowString}_countries.json`, countries);
-};
+  return countries;
+  
+}
 
-const loadAreas = async data => {
+function loadAreas(data) {
   const areas = data
     .match(/window.getAreaStat = (.*?)}catch/)[1];
+  return areas;
+  
+}
+
+function getLastMd5() {
+  try {
+    return fs.readFileSync('./rawdata/last_md5.txt', {encoding: 'utf8'});
+  } catch (e) {
+    console.error(e);
+    return "";
+  }
+}
+
+function saveData(countries, areas, curMd5) {
+  fs.writeFileSync(`./rawdata/${nowString}_countries.json`, countries);
   fs.writeFileSync(`./rawdata/${nowString}_areas.json`, areas);
+  fs.writeFileSync('./rawdata/last_md5.txt', curMd5);
 }
 
 let times = 0
 async function request () {
   return axios.request('https://3g.dxy.cn/newh5/view/pneumonia').then
   ( response => {
-    return Promise.all([
-      loadCountries(response.data),
-      loadAreas(response.data)
-    ])
+    const countries = loadCountries(response.data);
+    const areas = loadAreas(response.data);
+    const curMd5 = md5(countries+areas);
+    const lastMd5 = getLastMd5();
+    if (lastMd5 !== curMd5) {
+      saveData(countries, areas, curMd5);
+    }
   }).catch(e => {
     console.log('Retry')
     if (times++ > 3) {
