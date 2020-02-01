@@ -7,8 +7,16 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch crawler",
+            "cwd": "${workspaceFolder}/crawler/",
             "program": "${workspaceFolder}/crawler/index.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch 2019-ncov-crawler",
+            "cwd": "${workspaceFolder}/2019-ncov-crawler/",
+            "program": "${workspaceFolder}/2019-ncov-crawler/index.js"
         }
     ]
 }
