@@ -29,15 +29,14 @@ jobs:
         node index.js
       
     - name: Add & Commit
-      uses: EndBug/add-and-commit@v2
-      with:
-        # The name of the user that will be displayed as the author of the commit
+      uses: EndBug/add-and-commit@v2 # You can change this to use a specific version
+      with: # See more info about inputs below
         author_name: uhziel
-        # The email of the user that will be displayed as the author of the commit
         author_email: uhziel@gmail.com
-        # The message for the commit
-        message: ‘commit the datas of 2019-ncov-crawler’
-        # The pattern that mathces file names
-        pattern: '*.json'
+        cwd: "."
+        message: "commit the datas of 2019 ncov"
+        path: "."
+        pattern: "*.json"
+        force: false
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
